@@ -1,4 +1,5 @@
 // 아이템
+// 메뉴들의 id, 이름, 카테고리, 가격, 이미지, 설명을 담은 배열
 const menu = [
   {
     id: 1,
@@ -58,26 +59,39 @@ const menu = [
   },
 ];
 
-const sectionContainer = document.querySelector(".section-center");
-const btnContainer = document.querySelector(".btn-container");
+const sectionContainer = document.querySelector(".section-center"); // section-center라는 클래스를 사용하는 첫 번째 요소를 반환
+const btnContainer = document.querySelector(".btn-container"); // btn-container라는 클래스를 사용하는 첫 번째 요소를 반환
 
 /* DOMContentLoaded
-  - HTML 문서의 생명주기에 관여하는 주요 이벤트 중 하나
-  - 브라우저가 HTML을 전부 읽고 DOM 트리를 완성하는 즉시 발생한다.
-  - DOM이 준비된 것을 확인한 후, 원하는 DOM 노드를 찾아 핸들러를 등록해 인터페이스를 초기화할 때 활용할 수 있다.
-  */
+- HTML 문서의 생명주기에 관여하는 주요 이벤트 중 하나
+- 브라우저가 HTML을 전부 읽고 DOM 트리를 완성하는 즉시 발생한다.
+- DOM이 준비된 것을 확인한 후, 원하는 DOM 노드를 찾아 핸들러를 등록해 인터페이스를 초기화할 때 활용할 수 있다.
+*/
 
 // 아이템 로드
 window.addEventListener("DOMContentLoaded", function () {
-  displayMenuItems(menu);
-  displayMenuButtons();
+  displayMenuItems(menu); // 메뉴 아이템들을 보여주는 함수
+  displayMenuButtons(); // 메뉴 버튼들을 보여주는 함수
 });
 
 // 메뉴 아이템들을 보여주는 함수입니다.
 function displayMenuItems(menuItems) {
   let displayMenu = menuItems.map((item) => {
-    // 1. map 함수를 활용하여 카테고리에 맞는 아이템들을 보여주는 코드를 작성하세요.
-    // 아래 displayMenuButtons 함수에서 categoryBtns 함수를 참고하세요.
+    // map 함수를 활용하여 카테고리에 맞는 아이템들을 보여주는 코드
+    // 각 메뉴에 해당하는 HTML 문자열 만들기
+
+    return `<article class="menu-item">
+    <img src=${item.img} class="photo" alt=${item.title} />
+    <div class="item-info">
+      <header>
+        <h4>${item.title}</h4>
+        <h4 class="price">$${item.price}</h4>
+      </header>
+      <p class="item-text">
+        ${item.desc}
+      </p>
+    </div>
+  </article>`;
   });
 
   displayMenu = displayMenu.join(""); // map 함수 결과는 배열이므로, 이를 문자열로 변환합니다.
@@ -86,22 +100,32 @@ function displayMenuItems(menuItems) {
 
 // 메뉴 버튼을 보여주는 함수
 function displayMenuButtons() {
-  // 2. reduce 함수를 활용해서 menu 배열에서 category를 읽어와 저장하는 코드를 작성하세요.
-  // 이때 category는 중복 저장되지 않아야 합니다.
-  // menu의 아이템들 중에는 'all'이라는 카테고리를 가진 아이템이 없으므로 초깃값으로는 'all'을 가지고 있어야 합니다.
-  // categories는 최종적으로 ['all', 'breakfast', 'lunch', 'shakes', 'dinner']이 되어야 합니다.
-  const categories = menu.reduce();
+  const categories = menu.reduce(
+    // reduce 함수를 활용해서 menu 배열에서 category를 읽어와 저장하는 코드
+    // 이때 category는 중복 저장되지 않아야 합니다.
+    // menu의 아이템들 중에는 'all'이라는 카테고리를 가진 아이템이 없으므로 초깃값으로는 'all'을 가지고 있어야 합니다.
+    // categories는 최종적으로 ['all', 'breakfast', 'lunch', 'shakes', 'dinner']이 되어야 합니다.
+
+    function (values, item) {
+      if (!values.includes(item.category)) { // 현재 아이템의 카테고리가 값 배열에 포함되어 있는지 확인
+        values.push(item.category); // 포함되어 있지 않으면 카테고리를 배열로 push
+      }
+      return values;
+    },
+    ["all"] // 초기값을 all로 설정
+  );
 
   const categoryBtns = categories
     .map(function (category) {
       return `<button class="filter-btn" type="button" id="${category}">${category}</button>`;
-    })
-    .join("");
+    }) // map 함수를 활용하여 버튼에 해당하는 카테고리들을 보여주는 코드
+    .join(""); // 문자열로 변환
 
   btnContainer.innerHTML = categoryBtns; // 카테고리 버튼 그려주기
 
   // 카테고리별로 필터링하기
-  const filterBtns = btnContainer.querySelectorAll(".filter-btn");
+  const filterBtns = btnContainer.querySelectorAll(".filter-btn"); // btnContainer 내부에서 filter-btn이라는 클래스를 사용하는 요소를 반환
+  // 클릭 이벤트 핸들러 등록
   filterBtns.forEach(function (btn) {
     btn.addEventListener("click", function (e) {
       console.log(e);
@@ -109,7 +133,11 @@ function displayMenuButtons() {
 
       // 선택된 카테고리의 메뉴들만 보여주기
       const menuCategory = menu.filter(function (menuItem) {
-        // 3. filter 함수를 활용하여 선택된 카테고리에 해당하는 메뉴들만 보여주는 코드를 작성하세요.
+        // filter 함수를 활용하여 선택된 카테고리에 해당하는 메뉴들만 보여주는 코드
+
+        if (menuItem.category === category) {
+          return menuItem; // 메뉴의 카테고리와 선택된 버튼의 카테고리가 동일할 경우 해당 메뉴 반환
+        }
       });
 
       // 선택된 카테고리가 all인 경우 모든 메뉴를, all이 아닌 경우 menuCategory에 담긴 메뉴를 보여줍니다.
