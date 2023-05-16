@@ -1,12 +1,15 @@
 // 아이템
+// 메뉴 안에 아이템의 정보들을 담은 배열이다
+// 각각 id,title,category,price,img,desc의 정보를 가지고 있다
 const menu = [
   {
-    id: 1,
-    title: "buttermilk pancakes",
-    category: "breakfast",
-    price: 15.99,
-    img: "./img/item-1.jpeg",
+    id: 1, //id
+    title: "buttermilk pancakes",//제목
+    category: "breakfast", //카테고리 분류
+    price: 15.99, //가격
+    img: "./img/item-1.jpeg", //이미지 파일
     desc: `I'm baby woke mlkshk wolf bitters live-edge blue bottle, hammock freegan copper mug whatever cold-pressed `,
+    //카테고리에 관한 설명
   },
   {
     id: 2,
@@ -59,7 +62,11 @@ const menu = [
 ];
 
 const sectionContainer = document.querySelector(".section-center");
+//메뉴 아이템이 나타난다
+//.section-center 클래스를 가진 항목을 찾아 sectionContainer 변수에 저장합니다. 
+
 const btnContainer = document.querySelector(".btn-container");
+//카테고리 버튼이 나타난다
 
 /* DOMContentLoaded
   - HTML 문서의 생명주기에 관여하는 주요 이벤트 중 하나
@@ -69,8 +76,9 @@ const btnContainer = document.querySelector(".btn-container");
 
 // 아이템 로드
 window.addEventListener("DOMContentLoaded", function () {
-  displayMenuItems(menu);
-  displayMenuButtons();
+  //이벤트가 발생하면 해당 함수를 콜백한다.
+  displayMenuItems(menu); //메뉴를 처음 표시한다
+  displayMenuButtons(); //함수를 호출한다. //카테고리버튼
 });
 
 // 메뉴 아이템들을 보여주는 함수입니다.
@@ -97,6 +105,8 @@ function displayMenuButtons() {
       return `<button class="filter-btn" type="button" id="${category}">${category}</button>`;
     })
     .join("");
+    //카테고리즈 배열을 통해 카테고리 버튼을 생성
+    //join() 함수를 사용하여 배열의 요소들을 문자열로 합친다
 
   btnContainer.innerHTML = categoryBtns; // 카테고리 버튼 그려주기
 
@@ -112,7 +122,8 @@ function displayMenuButtons() {
         // 3. filter 함수를 활용하여 선택된 카테고리에 해당하는 메뉴들만 보여주는 코드를 작성하세요.
       });
 
-      // 선택된 카테고리가 all인 경우 모든 메뉴를, all이 아닌 경우 menuCategory에 담긴 메뉴를 보여줍니다.
+      // 선택된 카테고리가 all인 경우 모든 메뉴를, 
+      //all이 아닌 경우 menuCategory에 담긴 메뉴를 보여줍니다.
       if (category === "all") {
         displayMenuItems(menu);
       } else {
@@ -121,3 +132,4 @@ function displayMenuButtons() {
     });
   });
 }
+
